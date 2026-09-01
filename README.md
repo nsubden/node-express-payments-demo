@@ -1,50 +1,53 @@
 # Node Express Payments Demo
 
-A compact payment workflow demo showing webhook verification, idempotency,
-order/payment state transitions, error handling, environment configuration,
-and tests.
+A compact **Node.js + Express** payment workflow demo focused on safe backend patterns for payment processing, webhook verification, idempotency, state management, validation, error handling, environment configuration, and automated testing.
 
-This repository uses fictional data only. It does not include real payment
-keys, customer information, production infrastructure, or proprietary code.
+This repository uses **fictional data only**. It does not contain real payment credentials, customer information, production infrastructure, or proprietary application code.
 
-## Demonstrated skills
+## What this project demonstrates
 
-- Stripe-style webhook HMAC verification
-- Idempotent webhook event handling
-- Order and payment state transitions
+This demo is designed to show practical backend patterns commonly used in payment, ecommerce, and marketplace systems:
+
+- Webhook signature verification using HMAC
+- Idempotent webhook event processing
+- Explicit order and payment state transitions
+- Request validation
 - Defensive JSON API responses
 - Environment-based configuration
-- Automated tests with Node.js test runner
+- Automated tests using the Node.js test runner
+- Secret-safe development practices
+- Production-oriented error handling
 
-## Run locally
+## Architecture
 
-Requires Node.js 20 or newer.
+The project is intentionally small and easy to review.
 
-```sh
-cp .env.example .env
-export WEBHOOK_SECRET="choose-a-local-value"
-npm test
-npm start
-```
+### Request validation
 
-Create a fictional order:
+Incoming API requests are validated before they are allowed to create or modify application state.
 
-```sh
-curl -X POST http://localhost:3001/orders \
-  -H "Content-Type: application/json" \
-  -d '{"amount":1999,"currency":"USD"}'
-```
+### Webhook verification
 
-The webhook logic is in `src/webhookVerifier.js` and
-`src/paymentState.js`. It demonstrates the patterns without processing real
-payments.
+Webhook requests are authenticated using an HMAC signature before any event is processed.
 
-## Security boundaries
+This demonstrates the same general security pattern used by many payment providers without connecting the project to a real payment account.
 
-- All order IDs, payment IDs, events, and amounts are fictional.
-- `.env` and common key formats are ignored by Git.
-- The example never logs request bodies, signatures, or credentials.
-- No real payment provider SDK is included.
-- This repository is not connected to any production environment.
+### Idempotency
 
-See `SECURITY.md` before adapting this example.
+Processed webhook event IDs are tracked so the same event cannot be applied more than once.
+
+This protects the payment workflow from duplicate event delivery and repeated state changes.
+
+### Payment state transitions
+
+Payment state changes are handled explicitly rather than updated arbitrarily.
+
+Invalid transitions are rejected to protect order and payment consistency.
+
+Example lifecycle:
+```text
+pending
+  ↓
+paid
+  ↓
+refunded
