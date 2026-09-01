@@ -1,0 +1,24 @@
+{
+  "name": "node-express-payments-demo",
+  "version": "1.0.0",
+  "description": "Safe Node.js payment workflow demo with webhook verification, idempotency, state transitions, and tests.",
+  "type": "module",
+  "private": false,
+  "scripts": {
+    "start": "node src/server.js",
+    "test": "node --test"
+  },
+  "keywords": [
+    "node",
+    "express",
+    "payments",
+    "webhooks",
+    "idempotency",
+    "testing"
+  ],
+  "author": "Robert Nsubuga",
+  "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  }
+}
